@@ -66,6 +66,8 @@ return static function (RouteBuilder $routes) {
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+'])
             ->setPersist(['id']);
+        // $routes->connect('/bookings/confirm', ['controller' => 'Bookings', 'action' => 'confirm']);
+
 
         /*
          * Connect catchall routes for all controllers.

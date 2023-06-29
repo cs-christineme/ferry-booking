@@ -18,8 +18,8 @@ class BookingsController extends AppController
      */
     public function index()
     {
-        $bookings = $this->paginate($this->Bookings);
-        $this->set(compact('bookings'));
+        $bookings = $this->Bookings->find('all');
+        $this->set('bookings', $bookings);
     }
 
     /**
@@ -49,17 +49,19 @@ class BookingsController extends AppController
         if ($this->request->is('post')) {
             $seatId = $this->request->getData('seat_id');
             $seat = $this->Seats->get($seatId);
+            $userId = 1; // Replace with the currently logged in user's ID
+            $bookingDate = date('Y-m-d'); // Replace with the selected booking date
 
             if ($seat->status === 'available') {
                 $booking = $this->Bookings->patchEntity($booking, $this->request->getData());
                 $booking->seat_id = $seatId;
-
+                $booking->booking_date = $bookingDate;
                 if ($this->Bookings->save($booking)) {
                     $seat->updateStatus($booking->seat_id, 'booked');
                     $this->Seats->save($seat);
 
                     $this->Flash->success(__('Booking successful'));
-                    return $this->redirect(['action' => 'confirmation']);
+                    // return $this->redirect(['action' => 'confirmation']);
                 } else {
                     $this->Flash->error(__('Booking failed'));
                 }
